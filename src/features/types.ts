@@ -6,6 +6,7 @@ export interface File extends Blob {
 }
 
 // authSlice.ts
+// ログイン及び新規登録に使用する型
 export interface PROPS_AUTHEN {
   email: string;
   password: string;
