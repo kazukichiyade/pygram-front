@@ -1,3 +1,5 @@
+// 共通して使用するデータ型の定義だけしておく
+
 export interface File extends Blob {
   readonly lastModified: number;
   readonly name: string;
