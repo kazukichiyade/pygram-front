@@ -8,7 +8,7 @@ const apiUrl = process.env.REACT_APP_DEV_API_URL;
 
 // 非同期の関数はsliceの外に定義する決まりになっている
 
-// ログイン時の非同期関数
+// ログイン時の非同期関数(jwt取得)
 export const fetchAsyncLogin = createAsyncThunk(
   // アクション名を定義
   "auth/post",
@@ -110,7 +110,7 @@ export const fetchAsyncGetProfs = createAsyncThunk("profiles/get", async () => {
   return res.data;
 });
 
-// sliceの定義(createSlice(RTK))
+// slice作成(createSlice(RTK))
 export const authSlice = createSlice({
   name: "auth",
   // modal用の状態管理
@@ -181,6 +181,32 @@ export const authSlice = createSlice({
       state.myprofile.nickName = action.payload;
     },
   },
+  // 非同期関数の後処理を定義(extraReducers)
+  extraReducers: (builder) => {
+    // ログイン時の非同期関数が正常終了した場合、jwtをaction.payload.accessで取得し、localStorageに格納
+    builder.addCase(fetchAsyncLogin.fulfilled, (state, action) => {
+      localStorage.setItem("localJWT", action.payload.access);
+    });
+    // 新規登録時の非同期関数が正常終了した場合、新しく作成されたprofileデータをmyprofileに格納
+    builder.addCase(fetchAsyncCreateProf.fulfilled, (state, action) => {
+      state.myprofile = action.payload;
+    });
+    // 自身のプロフィールを取得する非同期関数が正常終了した場合、ログインしているユーザーのprofileデータをmyprofileに格納
+    builder.addCase(fetchAsyncGetMyProf.fulfilled, (state, action) => {
+      state.myprofile = action.payload;
+    });
+    // プロフィールの一覧を取得する非同期関数が正常終了した場合、取得した全プロフィールデータをprofilesに格納
+    builder.addCase(fetchAsyncGetProfs.fulfilled, (state, action) => {
+      state.profiles = action.payload;
+    });
+    // プロフィールを更新する非同期関数が正常終了した場合、更新後のプロフィールデータをmyprofileに格納し、profilesも新データで更新
+    builder.addCase(fetchAsyncUpdateProf.fulfilled, (state, action) => {
+      state.myprofile = action.payload;
+      state.profiles = state.profiles.map((prof) =>
+        prof.id === action.payload.id ? action.payload : prof
+      );
+    });
+  },
 });
 
 // reducer内で定義したactionをreactで定義できるようにexport
@@ -196,6 +222,13 @@ export const {
   editNickname,
 } = authSlice.actions;
 
-export const selectCount = (state: RootState) => state.counter.value;
+// state中から取得したい値(state.auth.isLoadingAuth)を指定して変数(selectIsLoadingAuth)へ格納
+export const selectIsLoadingAuth = (state: RootState) =>
+  state.auth.isLoadingAuth;
+export const selectOpenSignIn = (state: RootState) => state.auth.openSignIn;
+export const selectOpenSignUp = (state: RootState) => state.auth.openSignUp;
+export const selectOpenProfile = (state: RootState) => state.auth.openProfile;
+export const selectProfile = (state: RootState) => state.auth.myprofile;
+export const selectProfiles = (state: RootState) => state.auth.profiles;
 
 export default authSlice.reducer;
