@@ -113,7 +113,7 @@ export const fetchAsyncGetProfs = createAsyncThunk("profiles/get", async () => {
 // slice作成(createSlice(RTK))
 export const authSlice = createSlice({
   name: "auth",
-  // modal用の状態管理
+  // modal用の状態管理(初期状態)
   initialState: {
     // ログイン用のmodalの状態
     openSignIn: true,
