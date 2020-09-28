@@ -87,28 +87,34 @@ export const fetchAsyncUpdateProf = createAsyncThunk(
 );
 
 // 自身のプロフィールを取得する非同期関数
-// アクション名を定義
-export const fetchAsyncGetMyProf = createAsyncThunk("profile/get", async () => {
-  const res = await axios.get(`${apiUrl}api/myprofile/`, {
-    headers: {
-      // tokenを取得しないとアクセスできないのでlocalStorageからjwt取得
-      Authorization: `JWT ${localStorage.localJWT}`,
-    },
-  });
-  return res.data[0];
-});
+export const fetchAsyncGetMyProf = createAsyncThunk(
+  // アクション名を定義
+  "profile/get",
+  async () => {
+    const res = await axios.get(`${apiUrl}api/myprofile/`, {
+      headers: {
+        // tokenを取得しないとアクセスできないのでlocalStorageからjwt取得
+        Authorization: `JWT ${localStorage.localJWT}`,
+      },
+    });
+    return res.data[0];
+  }
+);
 
 // プロフィールの一覧を取得する非同期関数
-// アクション名を定義
-export const fetchAsyncGetProfs = createAsyncThunk("profiles/get", async () => {
-  const res = await axios.get(`${apiUrl}api/profile/`, {
-    headers: {
-      // tokenを取得しないとアクセスできないのでlocalStorageからjwt取得
-      Authorization: `JWT ${localStorage.localJWT}`,
-    },
-  });
-  return res.data;
-});
+export const fetchAsyncGetProfs = createAsyncThunk(
+  // アクション名を定義
+  "profiles/get",
+  async () => {
+    const res = await axios.get(`${apiUrl}api/profile/`, {
+      headers: {
+        // tokenを取得しないとアクセスできないのでlocalStorageからjwt取得
+        Authorization: `JWT ${localStorage.localJWT}`,
+      },
+    });
+    return res.data;
+  }
+);
 
 // slice作成(createSlice(RTK))
 export const authSlice = createSlice({
