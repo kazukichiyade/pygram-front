@@ -40,6 +40,8 @@ import {
 } from "../post/postSlice";
 
 import Post from "../post/Post";
+import EditProfile from "./EditProfile";
+import NewPost from "./NewPost";
 
 const StyledBadge = withStyles((theme) => ({
   badge: {
@@ -111,6 +113,8 @@ const Core: React.FC = () => {
   return (
     <div>
       <Auth />
+      <EditProfile />
+      <NewPost />
       <div className={styles.core_header}>
         <h1 className={styles.core_title}>SNS clone</h1>
         {/* ニックネームが存在する時(ログイン済みの時) */}
